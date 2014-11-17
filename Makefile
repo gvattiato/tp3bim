@@ -1,10 +1,10 @@
 
-all: ppm
+all: main
 
-ppm: ppm.c functions.o
-	gcc -Wall -o ppm ppm.cpp functions.o
-functions.o: functions.h functions.cpp
-	g++ -Wall -c -o functions.o functions.cpp
+main: main.c functions.o
+	gcc -Wall -o main main.c functions.o
+functions.o: functions.c
+	gcc -Wall -c -o functions.o functions.c
 clean:
 	rm *.o
 mrproper: clean
