@@ -24,19 +24,19 @@ void ppm_write_to_file(int width, int height, u_char* data, const char* fileName
   fclose(file);
 }
 
-void ppm_read_from_file(int *width, int *height, u_char** data, const char* fileName)
+void ppm_read_from_file(int& width, int& height, u_char** data, const char* fileName)
 {
   // Open file "fileName" in reading mode
   FILE* file = fopen(fileName, "rb");
 
   // Read file header
-  fscanf(file, "P6\n%d %d\n255\n", width, height);
+  fscanf(file, "P6\n%d %d\n255\n", &width, &height);
 
   // Allocate memory according to width and height
-  *data = new u_char [3 * (*width) * (*height)];
+  *data = new u_char [3 * width * height];
 
   // Read the actual image data
-  fread(*data, 3, (*width) * (*height), file);
+  fread(*data, 3, width * height, file);
 
   // Close file "fileName"
   fclose(file);
@@ -68,11 +68,11 @@ void ppm_desaturate(u_char* image, int width, int height)
   }
 }
 
-void ppm_shrink(u_char** image, int *width, int *height, int factor)
+void ppm_shrink(u_char** image, int& width, int& height, int factor)
 {
   // Compute new image size and allocate memory for the new image
-  int new_width = (*width) / factor;
-  int new_height  = (*height) / factor;
+  int new_width = width / factor;
+  int new_height  = height / factor;
   u_char* new_image = new u_char [3 * new_width * new_height];
 
   // Precompute factor^2 (for performance reasons)
@@ -96,7 +96,7 @@ void ppm_shrink(u_char** image, int *width, int *height, int factor)
       // model image corresponding to the pixel we are creating
       int x0 = x * factor;
       int y0 = y * factor;
-      int i0 = 3 * (y0 * (*width) + x0);
+      int i0 = 3 * (y0 * width + x0);
 
       // Compute RGB values for the new pixel
       int dx, dy;
@@ -106,7 +106,7 @@ void ppm_shrink(u_char** image, int *width, int *height, int factor)
         {
           // Compute the offset of the current pixel (in the model image)
           // with regard to the top-left pixel of the current "set of pixels"
-          int delta_i = 3 * (dy * (*width) + dx);
+          int delta_i = 3 * (dy * width + dx);
 
           // Accumulate RGB values
           red   += (*image)[i0+delta_i];
@@ -128,8 +128,8 @@ void ppm_shrink(u_char** image, int *width, int *height, int factor)
   }
 
   // Update image size
-  *width  = new_width;
-  *height = new_height;
+  width  = new_width;
+  height = new_height;
 
   // Update image
   delete(*image);
