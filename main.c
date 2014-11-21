@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "functions.c"
+#include "functions.h"
 
 
 //============================================================================
@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
   u_char* image = NULL;
   int width;
   int height;
-  FILE* ppm_input;
  
   ppm_read_from_file(&width, &height, &image, "gargouille.ppm");
   
@@ -44,9 +43,8 @@ int main(int argc, char* argv[])
   //--------------------------------------------------------------------------
 
   // Copy image into image_bw
-  int width_bw;
-  int height_bw;
-  char*image_bw = (u_char*) malloc(3 * width * height * sizeof(*image_bw));
+ 
+  u_char* image_bw = (u_char*) malloc(3 * width * height * sizeof(*image_bw));
   memcpy(image_bw, image, 3 * width * height * sizeof(*image_bw));
 
   // Desaturate image_bw
@@ -55,14 +53,14 @@ int main(int argc, char* argv[])
   // Write the desaturated image into "gargouille_BW.ppm"
   ppm_write_to_file(width, height, image_bw, "gargouille_BW.ppm");
 
-  // Free the desaturated image
-  free(image_bw);
-
   // Create image "bw" and initialise its parameters
   img* bw = (img*)malloc(sizeof(img));
-  bw->width = width_bw;
-  bw->height = height_bw;
-  bw->data = image_bw;
+  bw -> width = width;
+  bw -> height = height;
+  bw -> data = image_bw;
+
+  // Free the desaturated image
+  free(image_bw);
 
   //--------------------------------------------------------------------------
   // Create a resized copy of the image and
@@ -70,8 +68,8 @@ int main(int argc, char* argv[])
   //--------------------------------------------------------------------------
 
   // Copy image into image_small
-  int width_small; 
-  int height_small;
+  int width_small = width; 
+  int height_small = height;
   u_char* image_small = (u_char*) malloc(3 * width_small * height_small * sizeof(*image_small));
   memcpy(image_small, image, 3 * width_small * height_small * sizeof(*image_small));
 

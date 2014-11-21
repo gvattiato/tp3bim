@@ -8,9 +8,8 @@
 //============================================================================
 //                           Function declarations
 //============================================================================
-// Write the image contained in <data> (of size <width> * <height>)
-// into plain RGB ppm file <file>
-void ppm_write_to_file(int width, int height, u_char* data, char* fileName)
+
+void ppm_write_to_file(int width, int height, u_char* data, const char* fileName)
 {
   // Open file "fileName" in writing mode
   FILE* file = fopen(fileName, "wb");
@@ -25,10 +24,7 @@ void ppm_write_to_file(int width, int height, u_char* data, char* fileName)
   fclose(file);
 }
 
-// Read the image contained in plain RGB ppm file <file>
-// into <data> and set <width> and <height> accordingly
-// Warning: data is malloc_ed, don't forget to free it
-void ppm_read_from_file(int *width, int *height, u_char** data, char* fileName)
+void ppm_read_from_file(int *width, int *height, u_char** data, const char* fileName)
 {
   // Open file "fileName" in reading mode
   FILE* file = fopen(fileName, "rb");
@@ -46,7 +42,6 @@ void ppm_read_from_file(int *width, int *height, u_char** data, char* fileName)
   fclose(file);
 }
 
-// Desaturate (transform to B&W) <image> (of size <width> * <height>)
 void ppm_desaturate(u_char* image, int width, int height)
 {
   int x, y;
@@ -73,8 +68,6 @@ void ppm_desaturate(u_char* image, int width, int height)
   }
 }
 
-// Shrink image (of original size <width> * <height>) by factor <factor>
-// <width> and <height> are updated accordingly
 void ppm_shrink(u_char** image, int *width, int *height, int factor)
 {
   // Compute new image size and allocate memory for the new image
