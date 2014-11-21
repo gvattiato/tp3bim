@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
   ppm_read_from_file(&width, &height, &image, "gargouille.ppm");
   
   // Create image "newimage" and initialise its parameters
-  img* newimage = (img*)malloc(sizeof(img));
+  img* newimage = new img;
   newimage->data = image;
   newimage->width = width;
   newimage->height = height;
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
   // Copy image into image_bw
 
-  u_char* image_bw = (u_char*) malloc(3 * width * height * sizeof(*image_bw));
+  u_char* image_bw = new u_char [3 * width * height];
   memcpy(image_bw, image, 3 * width * height * sizeof(*image_bw));
 
   // Desaturate image_bw
@@ -54,13 +54,13 @@ int main(int argc, char* argv[])
   ppm_write_to_file(width, height, image_bw, "gargouille_BW.ppm");
 
   // Create image "bw" and initialise its parameters
-  img* bw = (img*)malloc(sizeof(img));
+  img* bw = new img;
   bw -> width = width;
   bw -> height = height;
   bw -> data = image_bw;
 
   // Free the desaturated image
-  free(image_bw);
+  delete(image_bw);
 
   //--------------------------------------------------------------------------
   // Create a resized copy of the image and
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
   // Copy image into image_small
   int width_small = width; 
   int height_small = height;
-  u_char* image_small = (u_char*) malloc(3 * width_small * height_small * sizeof(*image_small));
+  u_char* image_small = new u_char [3 * width_small * height_small];
   memcpy(image_small, image, 3 * width_small * height_small * sizeof(*image_small));
 
   // Shrink image_small size 2-fold
@@ -80,14 +80,14 @@ int main(int argc, char* argv[])
   ppm_write_to_file(width_small, height_small, image_small, "gargouille_small.ppm");
 
   // Create image "small" and initialise its parameters
-  img* small = (img*)malloc(sizeof(img));
+  img* small = new img;
   small->width = width_small;
   small->height = height_small;
   small->data = image_small;
 
   // Free the not yet freed images
-  free(image);
-  free(image_small);
+  delete(image);
+  delete(image_small);
 
   return 0;
 }
